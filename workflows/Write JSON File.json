@@ -1,0 +1,93 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-12T11:43:12.531Z",
+  "id": "CMuKL9JmypF4AKx3",
+  "isArchived": false,
+  "meta": null,
+  "name": "Write JSON File",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -140
+      ],
+      "id": "b29b3349-c434-4576-8454-fcca9b9196a0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {
+          "fileName": "Test.json"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -180,
+        -140
+      ],
+      "id": "258eb532-b6f4-4a95-9e0d-e244389df237",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/data/shared/test.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -140
+      ],
+      "id": "f4a32a5d-6cef-405e-9f59-774b412791fb",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "text": "First item in the File."
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-13T13:26:09.489Z",
+  "versionId": "d2b3ee58-40ad-4284-943c-7eca445a9358"
+}
