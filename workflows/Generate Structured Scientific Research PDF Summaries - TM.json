@@ -1,0 +1,251 @@
+{
+  "active": false,
+  "connections": {
+    "Converter": {
+      "main": [
+        [
+          {
+            "node": "PDF Finder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publisher": {
+      "main": [
+        [
+          {
+            "node": "Save to Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF Finder": {
+      "main": [
+        [
+          {
+            "node": "PDF Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Publisher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF Extractor": {
+      "main": [
+        [
+          {
+            "node": "Summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Local File Trigger": {
+      "main": [
+        [
+          {
+            "node": "Converter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-12T13:09:07.166Z",
+  "id": "v4qe6wCqKvYFn5Su",
+  "isArchived": false,
+  "meta": {
+    "templateId": "5607",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Generate Structured Scientific Research PDF Summaries - TM",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerOn": "folder",
+        "path": "/data/shared/pdf",
+        "events": [
+          "add"
+        ],
+        "options": {}
+      },
+      "id": "cdf76194-f7e3-4846-8d8b-cd13a3a0404b",
+      "name": "Local File Trigger",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "position": [
+        380,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=#Role \nYou are a research agent. You are very good at analyzing a research article and obtaining the best detail from it. You are a research expert who is providing data to another researcher. You are well versed in the scientific method. You will be provided data from a pdf {{ $json.text }}. You are to analyze this text and provide a thorough summary of it.\n\nProvide your summary in the format of:\nTitle\n\nIntroduction:\n-What is the importance of this study.\n-What are the specific aims of this study.\n-What questions are they trying to answer.\n-What studies have been done in the past in regards to this topic.\n\nMethods:\n-Go into detail about their methods.\n-What type of study is this.\n-How many subjects were included in the study.\n-How was their study designed.\n-What parameters or variables were they measuring. \n         -This is the most important part of this group. In the methods section of each paper they will define what the measurable outcomes of the study were. Sometimes they will have primary and secondary outcomes. You should include all of these.\n-What was their inclusion and exclusion criteria.\n\nResults:\n-This should be comprehensive.\n-It should give the results for every variable or measurable outcome tested.\n-specific numbers with statistical significance should be given.\n\nSummary:\n-You should provide the specific conclusions they came to from their results.\n-Provide how their results compare to other studies mentioned in their paper. In the summary section of the paper they often reference how their results compare to other studies. You should provide this in your summary.\n-Provide what their recommendations are based off the results.\n\nConclusion:\nProvide any weaknesses of the paper.\nProvide all examples of future studies they recommend be performed.\n\n\n\n#additional information\nIntroduction, methods, results, summary, and conclusion should all be new paragraphs. Your information should read smoothly and make sense. you can utilize bullet points or - if you would like for the individual points within the paragraphs. "
+        }
+      },
+      "id": "e759529e-fb21-4339-a981-a9cde3b9d63c",
+      "name": "Summarizer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1180,
+        240
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const originalPath = $input.first().json.path\n  const convertedPath = originalPath.replace(/\\\\/g, '/');\n  return {\n    json: {\n      ...item.json,\n      convertedPath\n    }\n  };\n});"
+      },
+      "id": "35c34c88-354b-4018-a66f-5cd2c3e8164a",
+      "name": "Converter",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        580,
+        240
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.convertedPath }}",
+        "options": {}
+      },
+      "id": "e357d953-e875-46f5-89a8-4c876c3bdd6e",
+      "name": "PDF Finder",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        780,
+        240
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "1905ff88-d54a-4435-9ad1-7c1597da57cb",
+      "name": "PDF Extractor",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        980,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {}
+      },
+      "id": "48726ce0-5978-47f6-9688-7ff675128153",
+      "name": "Publisher",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        1540,
+        240
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/shared/summary/{{ $('PDF Finder').item.json.fileName }}.txt",
+        "options": {}
+      },
+      "id": "5cc8a81d-3c55-4e8e-bb8c-1dd41e124ce1",
+      "name": "Save to Folder",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        1740,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Right click and open local file trigger.\n-Insert the path to your folder.  Open the folder and copy and paste the path at the top.\n-Example C:/Desktop/PDF\n-In the above example, PDF is the name of the folder.\n \nCreate an open ai key:\n-Create an open AI account\n-Go to platform.openai.com/api-keys\n-After creating an account click on your name in the top right corner. Click on your profile.\n-On the left side click on API keys.\n-Create new secret key.\n-Give it a name (optional).\n-Create secret key and copy.\n-Open the n8n workflow.\n-Right click and open the OpenAI chat model under Summarizer tools Agent.\n-Click under credential to connect with and click create new credential.\n-Paste the copied API Key in this position in n8n.\n-IMPORTANT: This workflow uses GPT-4o. This cost ~$0.01 per run. You must put money, recommend no more than $5, into your open ai account.\n-Click on your profile again. On left hand side click on billing.  Add credit to balance.\n \n \n \nRight click on save to folder node.\n-Insert path to folder where you want the summary saved.\n-Example C:/Desktop/Summary/Summary.txt\nTips: you can try saving it as a pdf, but I found saving it as a txt had less errors. \n-You can copy the path again, but you must make sure all \\ are / in the path. This is how n8n interprets the pathway. The trigger node does not matter and should not be changed because the converter node does this automatically.\n \n \nCommon issues:\n-If your first open/read/write files from disk node has an error saying no data, try running n8n as administrator.\n-If running localhost, search command prompt or terminal, before opening right click and choose run as administrator. Then start n8n as you normally would.\n-If the pdf is too large open AI will not be able to summarize it and will have an error that you have reached your limit of requests.\n \n \n \nHow it works:\nYou will have a folder predetermined on your computer. When you find a pdf of a scientific article that you would like a summary of, open n8n and click test workflow. Then save the pdf to the dedicated folder. With n8n running you click test step on the trigger. It will automatically produce a summary of the pdf and save it to a specified folder.\n \nHow to improve:\nIf you have a specific expertise in a field of study, you can customize the output to that field. For example, if you are a marine biologist, you can change the portion of the text prompt in the summarizer tool from \"You are a research expert who is providing data to another researcher.\" to \"You are a marine biologist expert who is providing data to another marine biologist.\"",
+        "height": 820,
+        "width": 1320,
+        "color": 5
+      },
+      "id": "be22bace-ec61-4494-8c88-8ef00b8624dd",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        460,
+        -600
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "deepseek-r1:8b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        460
+      ],
+      "id": "de62a2a2-ac6a-4552-b6b9-7716a3675ab3",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ZNxBWlA633mtFz54",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-13T13:25:24.611Z",
+      "updatedAt": "2025-07-13T13:25:24.611Z",
+      "id": "vCHPHNpOH9mTNF9i",
+      "name": "Summaries"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-13T13:25:26.356Z",
+  "versionId": "32d54050-a90c-4cca-b14c-9e85834bb3b2"
+}
