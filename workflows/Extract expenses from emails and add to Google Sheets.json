@@ -1,0 +1,205 @@
+{
+  "active": false,
+  "connections": {
+    "Check subject": {
+      "main": [
+        [
+          {
+            "node": "Read Receipts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Receipts": {
+      "main": [
+        [
+          {
+            "node": "Set column data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set column data": {
+      "main": [
+        [
+          {
+            "node": "Add to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup Variables": {
+      "main": [
+        [
+          {
+            "node": "Check subject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for new emails": {
+      "main": [
+        [
+          {
+            "node": "Setup Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-14T18:03:02.931Z",
+  "id": "icIWY0RW4Yd3RSTH",
+  "isArchived": false,
+  "meta": {
+    "templateId": "1466"
+  },
+  "name": "Extract expenses from emails and add to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"subject\"].toLowerCase()}}",
+              "operation": "regex",
+              "value2": "=/{{$json[\"subjectPatterns\"].toLowerCase()}}/"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Check subject",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        740,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "7522ae8a-b756-49ac-b247-1725b357b025"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "subjectPatterns",
+              "value": "(expenses|reciept)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Setup Variables",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        560,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "4d991f04-928a-4a56-8792-cbd8f6ff060c"
+    },
+    {
+      "parameters": {
+        "mailbox": "Inbox",
+        "format": "resolved",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "name": "Check for new emails",
+      "type": "n8n-nodes-base.emailReadImap",
+      "position": [
+        380,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "f2c2c7d9-bff5-4024-ae3d-68684a6c7ab3"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0"
+      },
+      "name": "Read Receipts",
+      "type": "n8n-nodes-base.mindee",
+      "position": [
+        960,
+        220
+      ],
+      "typeVersion": 1,
+      "id": "7ef2880d-874f-463b-a996-b6511dfbfb0b"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "Date",
+              "value": "={{$json[\"date\"]}}"
+            },
+            {
+              "name": "Description",
+              "value": "={{$node[\"Check for new emails\"].json[\"subject\"].split(\"-\")[1]}}"
+            },
+            {
+              "name": "Category",
+              "value": "={{$json[\"category\"]}}"
+            },
+            {
+              "name": "Currency",
+              "value": "={{$json[\"currency\"]}}"
+            },
+            {
+              "name": "Amount",
+              "value": "={{$json[\"total\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set column data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1140,
+        220
+      ],
+      "typeVersion": 1,
+      "id": "d8536619-d3a1-444e-ad58-ee2197ecd8a9"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "1xAtx1ORZYKu4urgqpOe3DawFjiWeOZO0VCVvOlQYnaE",
+        "range": "A:E",
+        "options": {}
+      },
+      "name": "Add to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1320,
+        220
+      ],
+      "typeVersion": 1,
+      "id": "f196bc96-89f1-4dd4-b727-5a437bde20bc"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-14T18:03:02.931Z",
+  "versionId": "42e5c9eb-de41-4d03-b93a-842c51abe6d3"
+}
