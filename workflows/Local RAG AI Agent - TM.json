@@ -1,0 +1,573 @@
+{
+  "active": true,
+  "connections": {
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store Insert",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store Insert",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract Document Text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Document Text1": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store Insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-13T04:59:59.020Z",
+  "id": "5CPAKInlQ6MOWYst",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f722e3e1e81e942a38faa434ad0aee8699371bbff9f883b9d5c59a7c726605af"
+  },
+  "name": "Local RAG AI Agent - TM",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "61a64327-aaa8-4881-bd00-3029e5ad704e",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        560
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "66Zgl5z1i8ZcnoXn",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:latest",
+        "options": {}
+      },
+      "id": "4ff75516-7ffd-43b4-bce0-52d8daa81ef3",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        920,
+        560
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "ZNxBWlA633mtFz54",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:latest",
+        "options": {}
+      },
+      "id": "15ffef64-fad2-4327-b466-7f6900dbccc6",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        500
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "ZNxBWlA633mtFz54",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "documents",
+        "topK": 3
+      },
+      "id": "27c29995-f21a-4e27-b2c2-f54f415c6ac1",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "id": "c9c16a7f-ea98-4542-b734-9339f6e51b72",
+      "name": "Embeddings Ollama",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        600
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "ZNxBWlA633mtFz54",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "file_id",
+                "value": "={{ $('Read/Write Files from Disk').item.json.fileName }}"
+              },
+              {
+                "name": "date",
+                "value": "={{ $now }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "a1a535d9-e684-4530-ad73-bea8246577e8",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 100,
+        "options": {}
+      },
+      "id": "1291049d-e6c7-460a-a2ea-1c437ede1da6",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        1320
+      ]
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "id": "a2e1e024-2fcc-4aeb-bf7a-1580323f6f26",
+      "name": "Embeddings Ollama1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        1100
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "ZNxBWlA633mtFz54",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Local RAG AI Agent with Chat Interface",
+        "height": 527.3027193303974,
+        "width": 969.0343804425795
+      },
+      "id": "3ec2df4c-c690-4dd6-b215-de315aec5b7d",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Agent Tools for Local RAG",
+        "height": 528.85546469693,
+        "width": 583.4552380860637,
+        "color": 4
+      },
+      "id": "2b9a9fe8-f876-4ade-aa78-37eca3368b53",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Workflow to Create Local Knowledgebase from Google Drive Folder",
+        "height": 705.2695614889159,
+        "width": 1568.9362829025763,
+        "color": 5
+      },
+      "id": "d53a9651-844d-4a30-b44a-450dd610b954",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ba247045-8416-40bf-87f9-85ff7579f2d0",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        620,
+        340
+      ],
+      "webhookId": "e050b236-0f8f-46fc-b228-ec69ed151a5c"
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "id": "9cf45203-4f5a-476a-b66d-b015e7e59656",
+      "name": "Qdrant Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        480
+      ],
+      "credentials": {
+        "qdrantApi": {
+          "id": "wVcIArkOHlAABgaK",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "id": "750b7c0b-49d6-465e-ab6a-6f0d93c97220",
+      "name": "Qdrant Vector Store Insert",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        880
+      ],
+      "credentials": {
+        "qdrantApi": {
+          "id": "wVcIArkOHlAABgaK",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3e8b6ae8-3efe-43ea-b1c0-3fe800dd92d3",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoke_n8n_agent",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "b2ce4fc8-4ae3-4c2f-b631-90bdabc02db7",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        620,
+        520
+      ],
+      "webhookId": "2d455c8d-f5c4-491d-b518-71433c248670"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c17747e6-91ca-4d3d-968b-3b2c6117bd16",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1000,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2e5125f-0b8d-4576-b133-aecea91a8bb4",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/shared/meetings/*.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        900
+      ],
+      "id": "961bf369-d4e6-42a6-9d20-8bb9e980d1aa",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "id": "c5b1ebf7-5407-419e-b418-744b3e634f00",
+      "name": "Extract Document Text1",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        880
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        620,
+        900
+      ],
+      "id": "c4b0dda4-d1cf-4036-8ada-5e36a2e8e8d7",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 2,
+  "updatedAt": "2025-07-13T10:38:59.735Z",
+  "versionId": "b4ba9dcf-0b0b-4add-b48f-b286663c043e"
+}
